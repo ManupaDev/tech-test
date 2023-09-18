@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { registerUser } from "@/lib/api";
+import { useMutation } from "@tanstack/react-query";
 
 const registerFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -34,9 +35,11 @@ function RegisterPage() {
     },
   });
 
+  const { mutate } = useMutation({ mutationFn: registerUser });
+
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     console.log(values);
-    await registerUser(values);
+    mutate(values);
   }
 
   return (
