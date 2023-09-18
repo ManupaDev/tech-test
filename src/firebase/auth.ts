@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
   Auth,
+  User,
 } from "firebase/auth";
 
 export const auth = getAuth(app);
@@ -15,7 +16,7 @@ export const getCurrentUser = async () => {
     return new Promise((resolve, reject) => {
       auth.onAuthStateChanged((user) => {
         if (user) {
-          resolve(user.uid);
+          resolve(user);
         } else {
           resolve(null);
         }
@@ -23,8 +24,8 @@ export const getCurrentUser = async () => {
     });
   };
 
-  const uid = await promisifiedOnAuthStateChanged(auth);
-  return uid;
+  const user = (await promisifiedOnAuthStateChanged(auth)) as User | null;
+  return user;
 };
 
 export const signUpUserWithEmailAndPassword = async (

@@ -4,6 +4,7 @@ import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { signUpUser } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
 
-const registerFormSchema = z.object({
+const signUpFormSchema = z.object({
   name: z.string().min(2).max(50),
   email: z.string().email(),
   phone: z.string(),
@@ -26,34 +27,38 @@ const registerFormSchema = z.object({
   confirmPassword: z.string().min(8),
 });
 
-function RegisterPage() {
-  const registerForm = useForm<z.infer<typeof registerFormSchema>>({
-    resolver: zodResolver(registerFormSchema),
+function SignUpPage() {
+  const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
+    resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      password: "z.string().min(8)",
-      confirmPassword: "z.string().min(8)",
+      password: "",
+      confirmPassword: "",
     },
   });
 
-  const { mutate } = useMutation({ mutationFn: signUpUser });
+  const router = useRouter();
+  const { mutate } = useMutation({
+    mutationFn: signUpUser,
+    onSuccess: () => router.push("/auth/sign-in"),
+  });
 
-  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+  async function onSubmit(values: z.infer<typeof signUpFormSchema>) {
     console.log(values);
     mutate(values);
   }
 
   return (
     <div className="min-h-screen border  flex justify-center items-center">
-      <Form {...registerForm}>
+      <Form {...signUpForm}>
         <form
-          onSubmit={registerForm.handleSubmit(onSubmit)}
+          onSubmit={signUpForm.handleSubmit(onSubmit)}
           className="space-y-8 border border-black w-1/2 p-4 rounded-md"
         >
           <FormField
-            control={registerForm.control}
+            control={signUpForm.control}
             name="name"
             render={({ field }) => (
               <FormItem>
@@ -66,7 +71,7 @@ function RegisterPage() {
             )}
           />
           <FormField
-            control={registerForm.control}
+            control={signUpForm.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -79,7 +84,7 @@ function RegisterPage() {
             )}
           />
           <FormField
-            control={registerForm.control}
+            control={signUpForm.control}
             name="phone"
             render={({ field }) => (
               <FormItem>
@@ -92,7 +97,7 @@ function RegisterPage() {
             )}
           />
           <FormField
-            control={registerForm.control}
+            control={signUpForm.control}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -105,7 +110,7 @@ function RegisterPage() {
             )}
           />
           <FormField
-            control={registerForm.control}
+            control={signUpForm.control}
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
@@ -121,11 +126,11 @@ function RegisterPage() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Sign Up</Button>
         </form>
       </Form>
     </div>
   );
 }
 
-export default RegisterPage;
+export default SignUpPage;

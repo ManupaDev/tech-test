@@ -13,16 +13,16 @@ datasource db {
 
 model User {
   id      String @id @default(cuid())
-  uid     String
+  uid     String @unique
   name    String
   email   String @unique
   phone   String
-  number1 Int?
-  number2 Int?
+  number1 Int
+  number2 Int
 }
 
 model Media {
   id     String @id @default(cuid())
-  number Int
   image  String
+  number Int
 }
