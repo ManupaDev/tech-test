@@ -9,20 +9,21 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { registerUser } from "@/lib/api";
+import { signUpUser } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
 
 const registerFormSchema = z.object({
   name: z.string().min(2).max(50),
   email: z.string().email(),
   phone: z.string(),
+  password: z.string().min(8),
+  confirmPassword: z.string().min(8),
 });
 
 function RegisterPage() {
@@ -32,10 +33,12 @@ function RegisterPage() {
       name: "",
       email: "",
       phone: "",
+      password: "z.string().min(8)",
+      confirmPassword: "z.string().min(8)",
     },
   });
 
-  const { mutate } = useMutation({ mutationFn: registerUser });
+  const { mutate } = useMutation({ mutationFn: signUpUser });
 
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     console.log(values);
@@ -58,9 +61,6 @@ function RegisterPage() {
                 <FormControl>
                   <Input placeholder="John Doe" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -74,9 +74,6 @@ function RegisterPage() {
                 <FormControl>
                   <Input placeholder="johndoe@gmail.com" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -90,9 +87,36 @@ function RegisterPage() {
                 <FormControl>
                   <Input placeholder="+XX" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={registerForm.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={registerForm.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Confirm Password"
+                    type="password"
+                    {...field}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
