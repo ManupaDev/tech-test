@@ -44,22 +44,13 @@ export const signInUserWithEmailAndPassword = async (
   email: string,
   password: string
 ) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    console.log(userCredential.user);
-  } catch (error) {
-    console.log(error);
-  }
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
 };
 
 export const signOutUser = async () => {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.log(error);
-  }
+  await signOut(auth);
 };
