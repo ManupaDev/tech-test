@@ -2,14 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { getMedia, getUser, signOutUserFromApp } from "@/lib/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { isError, useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,7 +16,7 @@ import Image from "next/image";
 export default function Home() {
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading,isError } = useQuery({
     queryKey: ["USER"],
     queryFn: getUser,
     onError: () => router.push("/auth/sign-in"),
@@ -45,6 +43,10 @@ export default function Home() {
         <h1>Loading...</h1>
       </div>
     );
+  }
+
+  if (isError) {
+    return null;
   }
 
   return (

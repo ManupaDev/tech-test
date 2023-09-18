@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import * as z from "zod";
@@ -18,6 +19,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { signInUser, signUpUser } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -25,6 +29,8 @@ const signInFormSchema = z.object({
 });
 
 function SignInPage() {
+  const { toast } = useToast();
+
   const signInForm = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -34,13 +40,18 @@ function SignInPage() {
   });
 
   const router = useRouter();
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: signInUser,
     onSuccess: () => router.push("/"),
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Could not Sign In",
+      });
+    },
   });
 
   async function onSubmit(values: z.infer<typeof signInFormSchema>) {
-    console.log(values);
     mutate(values);
   }
 
@@ -77,7 +88,13 @@ function SignInPage() {
               </FormItem>
             )}
           />
-          <Button type="submit">Sign In</Button>
+          <Button type="submit" className={cn({ "cursor-wait": isLoading })}>
+            {!isLoading ? "Sign In" : "Signing In..."}
+          </Button>
+          <p>Don't have an account ?</p>
+          <Link href={"/auth/sign-up"} className="underline">
+            Sign Up
+          </Link>
         </form>
       </Form>
     </div>

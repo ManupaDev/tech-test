@@ -18,6 +18,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { signUpUser } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const signUpFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -28,6 +31,8 @@ const signUpFormSchema = z.object({
 });
 
 function SignUpPage() {
+  const { toast } = useToast();
+
   const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
@@ -40,13 +45,18 @@ function SignUpPage() {
   });
 
   const router = useRouter();
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: signUpUser,
     onSuccess: () => router.push("/auth/sign-in"),
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Could not Sign Up",
+      });
+    },
   });
 
   async function onSubmit(values: z.infer<typeof signUpFormSchema>) {
-    console.log(values);
     mutate(values);
   }
 
@@ -126,7 +136,13 @@ function SignUpPage() {
               </FormItem>
             )}
           />
-          <Button type="submit">Sign Up</Button>
+          <Button type="submit" className={cn({ "cursor-wait": isLoading })}>
+            {!isLoading ? "Sign Up" : "Signing Up..."}
+          </Button>
+          <p>Already have an account ?</p>
+          <Link href={"/auth/sign-in"} className="underline">
+            Sign In
+          </Link>
         </form>
       </Form>
     </div>
