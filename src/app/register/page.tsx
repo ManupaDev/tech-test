@@ -72,7 +72,7 @@ function RegisterPage() {
                   <Input placeholder="johndoe@gmail.com" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is your public display name.
+                  This is your public display email.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -88,7 +88,7 @@ function RegisterPage() {
                   <Input placeholder="+XX" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is your public display name.
+                  This is your Phone number.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
