@@ -74,3 +74,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .grid-cols-1_2_1 {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+}

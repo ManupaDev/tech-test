@@ -51,8 +51,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-4">
-      <div className="flex justify-between items-center">
-        <div>
+      <div className="flex justify-center items-start gap-x-4">
+        <div className="text-center">
           <h1 className="text-3xl">Hi, {data?.name}</h1>
           <p className="text-2xl">Nice to meet you. 😃</p>
         </div>
@@ -62,7 +62,7 @@ export default function Home() {
           </Button>
         </div>
       </div>
-      <div className="py-4 pr-4 gap-x-4 grid grid-cols-2 mt-4">
+      <div className="py-4 pr-4 gap-x-4 flex justify-between mt-4">
         {media?.map((el, i) => (
           <ImageSection key={i} number={el.number} media={el.media} />
         ))}
@@ -79,7 +79,7 @@ function ImageSection({
   media: { id: string; image: string; number: number }[];
 }) {
   return (
-    <Card>
+    <Card className="w-1/3">
       <CardHeader>
         <CardTitle className="text-xl">
           Activities recommended for {number}
